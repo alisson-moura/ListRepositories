@@ -40,7 +40,31 @@ export const Owner = styled.header`
         max-width: 400px;
     }
 `;
-export const Filter = styled.ul``;
+export const Filter = styled.form`
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    select {
+        border: 1px solid #7159c1;
+        padding: 10px 10px;
+        font-size: 14px;
+        border-radius: 4px;
+        text-align: center;
+    }
+`;
+export const SubmitButton = styled.button`
+    background: #7159c1;
+    border: 0;
+    padding: 0 15px;
+    margin-left: 10px;
+    border-radius: 4px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
 export const IssueList = styled.ul`
     padding-top: 30px;
     margin-top: 30px;
@@ -95,5 +119,29 @@ export const IssueList = styled.ul`
             font-size: 12px;
             color: #999;
         }
+    }
+`;
+export const Pages = styled.div`
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+
+    button {
+        font-size: 25px;
+        color: #7351c1;
+        cursor: pointer;
+        border: none;
+        background: none;
+    }
+
+    span {
+        margin-left: 30px;
+        margin-right: 30px;
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 5px 15px;
+        background: #7159c1;
+        border-radius: 4px;
     }
 `;
