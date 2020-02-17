@@ -40,7 +40,7 @@ export const Owner = styled.header`
         max-width: 400px;
     }
 `;
-
+export const Filter = styled.ul``;
 export const IssueList = styled.ul`
     padding-top: 30px;
     margin-top: 30px;
