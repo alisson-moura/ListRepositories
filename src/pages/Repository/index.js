@@ -29,7 +29,7 @@ export default class Repository extends Component {
         repository: {},
         issues: [],
         loading: true,
-        filter: 'All',
+        filter: 'open',
         repoName: '',
         page: 1,
     };
@@ -37,12 +37,12 @@ export default class Repository extends Component {
     async componentDidMount() {
         const { match } = this.props;
         const repoName = decodeURIComponent(match.params.repository);
-        const { page } = this.state;
+        const { filter } = this.state;
         const [repository, issues] = await Promise.all([
             api.get(`/repos/${repoName}`),
-            api.get(`/repos/${repoName}/issues?page=${page}`, {
+            api.get(`/repos/${repoName}/issues`, {
                 params: {
-                    state: 'open',
+                    state: filter,
                     per_page: 5,
                 },
             }),
@@ -56,33 +56,41 @@ export default class Repository extends Component {
         });
     }
 
-    async componentDidUpdate(_, prevState) {}
-
     handleChange = async e => {
         this.setState({ filter: e.target.value });
     };
 
-    handleFilter = async e => {
-        e.preventDefault();
+    loadIssues = async () => {
         const { filter, repoName, page } = this.state;
-        const issues = await api.get(
-            `/repos/${repoName}/issues?page=${page}?state=${filter}`
-        );
+        const issues = await api.get(`/repos/${repoName}/issues`, {
+            params: {
+                state: filter,
+                per_page: 5,
+                page,
+            },
+        });
         this.setState({
             issues: issues.data,
         });
     };
 
-    handleNextPage = e => {
+    handleClickFilter = e => {
         e.preventDefault();
-        const { page } = this.state;
-        this.setState({ page: page + 1 });
+        this.loadIssues();
     };
 
-    handlePrevPage = e => {
+    handleNextPage = async e => {
         e.preventDefault();
         const { page } = this.state;
-        this.setState({ page: page - 1 });
+        await this.setState({ page: page + 1 });
+        this.loadIssues();
+    };
+
+    handlePrevPage = async e => {
+        e.preventDefault();
+        const { page } = this.state;
+        await this.setState({ page: page - 1 });
+        this.loadIssues();
     };
 
     render() {
@@ -103,13 +111,13 @@ export default class Repository extends Component {
                 </Owner>
 
                 <IssueList>
-                    <Filter onSubmit={this.handleFilter}>
+                    <Filter onSubmit={this.handleClickFilter}>
                         <select value={filter} onChange={this.handleChange}>
                             <option value="all">All</option>
                             <option value="open">Open</option>
                             <option value="closed">Closed</option>
                         </select>
-                        <SubmitButton loading={loading}>
+                        <SubmitButton>
                             <FaSearch type="submit" color="#FFF" size={16} />
                         </SubmitButton>
                     </Filter>
